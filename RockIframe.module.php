@@ -14,7 +14,9 @@ class RockIframe extends WireData implements Module {
       'title' => 'RockIframe',
       'version' => '0.0.1',
       'summary' => 'Iframe Sidebar for the ProcessWire page edit screen',
-      'autoload' => "template=admin",
+      // must be true, not template=admin!
+      // otherwise the pageview hook will not fire
+      'autoload' => true,
       'singular' => true,
       'icon' => 'columns',
       'requires' => [],
