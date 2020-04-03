@@ -44,7 +44,10 @@ class RockIframe extends WireData implements Module {
   }
 
   public function getUrl($data) {
-    if($data instanceof Pagefiles) return $data->first()->url;
+    if($data instanceof Pagefiles) {
+      if(!$data->count()) return;
+      return $data->first()->url;
+    }
     return $data;
   }
 }
