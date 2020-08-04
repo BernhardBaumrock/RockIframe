@@ -47,6 +47,7 @@ class RockIframe extends WireData implements Module {
     if($data instanceof Pagefiles) {
       if(!$data->count()) return;
       $file = $data->first();
+      if(!$file->filemtime) return;
       return $file->url."?m=".$file->filemtime;
     }
     return $data;
