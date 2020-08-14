@@ -44,6 +44,15 @@ class RockIframe extends WireData implements Module {
   }
 
   public function getUrl($data) {
+    if(is_file($data)) {
+      $file = $this->info($data);
+      return $file->url.$file->m;
+    }
+    if($data instanceof Pagefile) {
+      $file = $data;
+      if(!$file->filemtime) return;
+      return $file->url."?m=".$file->filemtime;
+    }
     if($data instanceof Pagefiles) {
       if(!$data->count()) return;
       $file = $data->first();
@@ -51,5 +60,25 @@ class RockIframe extends WireData implements Module {
       return $file->url."?m=".$file->filemtime;
     }
     return $data;
+  }
+
+  /**
+   * Get pathinfo of file/directory as WireData
+   * @return WireData
+   */
+  public function info($str) {
+    $config = $this->wire('config');
+    $info = $this->wire(new WireData()); /** @var WireData $info */
+    $info->setArray(pathinfo($str));
+    $info->dirname = Paths::normalizeSeparators($info->dirname)."/";
+    $info->path = "{$info->dirname}{$info->basename}";
+    $info->url = str_replace($config->paths->root, $config->urls->root, $info->path);
+    $info->is_dir = is_dir($info->path);
+    $info->is_file = is_file($info->path);
+    $info->isDir = !$info->extension;
+    $info->isFile = !!$info->extension;
+    $info->exists = ($info->is_dir || $info->is_file);
+    if($info->is_file) $info->m = "?m=".filemtime($info->path);
+    return $info;
   }
 }
