@@ -43,6 +43,10 @@ class RockIframe extends WireData implements Module {
     $this->frame = "<iframe src='$url' class='RockIframe'></iframe>";
   }
 
+  public function showUrl($url) {
+    $this->frame = "<iframe src='$url' class='RockIframe'></iframe>";
+  }
+
   public function getUrl($data) {
     if(is_file($data)) {
       $file = $this->info($data);
